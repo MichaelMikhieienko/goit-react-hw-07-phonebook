@@ -1,3 +1,4 @@
+// actions.js
 import { createAction } from '@reduxjs/toolkit';
 import { nanoid } from 'nanoid';
 
