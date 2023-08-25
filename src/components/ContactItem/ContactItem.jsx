@@ -1,15 +1,18 @@
 // ContactItem.jsx
 import React from 'react';
 import PropTypes from 'prop-types';
+import { useDispatch } from 'react-redux';
+import { deleteContact } from '../../redux/reducers';
 
-const ContactItem = ({ contact, deleteContact }) => {
+const ContactItem = ({ contact }) => {
+  const dispatch = useDispatch();
   const handleDelete = () => {
-    deleteContact(contact.id);
+    dispatch(deleteContact(contact.id));
   };
 
   return (
     <div>
-      {contact.name} - {contact.number}
+      {contact.name} - {contact.Phone}
       <button onClick={handleDelete}>Delete</button>
     </div>
   );
@@ -19,9 +22,8 @@ ContactItem.propTypes = {
   contact: PropTypes.shape({
     id: PropTypes.string.isRequired,
     name: PropTypes.string.isRequired,
-    number: PropTypes.string.isRequired,
+    Phone: PropTypes.string.isRequired,
   }).isRequired,
-  deleteContact: PropTypes.func.isRequired,
 };
 
 export default ContactItem;

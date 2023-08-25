@@ -1,23 +1,38 @@
 // ContactForm.jsx
 import React, { useState } from 'react';
-import PropTypes from 'prop-types';
+import { useDispatch, useSelector } from 'react-redux';
 import { nanoid } from 'nanoid';
+import { addContact } from '../../redux/reducers';
 
-const ContactForm = ({ addContact }) => {
+const ContactForm = () => {
+  const dispatch = useDispatch();
   const [name, setName] = useState('');
   const [number, setNumber] = useState('');
+  const { contacts } = useSelector(state => state.phonebook);
 
-  const handleSubmit = (e) => {
+  const handleAddContact = contact => {
+    if (!checkNewContactPresence(contact.name)) {
+      dispatch(addContact(contact));
+    } else {
+      alert(`${contact.name} is already in contacts!`);
+    }
+  };
+
+  const checkNewContactPresence = contactName => {
+    return contacts.items.some(contact => contact.name === contactName);
+  };
+
+  const handleSubmit = e => {
     e.preventDefault();
     if (name.trim() === '' || number.trim() === '') return;
 
     const contact = {
       id: nanoid(),
       name: name.trim(),
-      number: number.trim()
+      Phone: number.trim(),
     };
 
-    addContact(contact);
+    handleAddContact(contact);
     setName('');
     setNumber('');
   };
@@ -32,7 +47,7 @@ const ContactForm = ({ addContact }) => {
         title="Name may contain only letters, apostrophe, dash and spaces. For example Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan"
         required
         value={name}
-        onChange={(e) => setName(e.target.value)}
+        onChange={e => setName(e.target.value)}
       />
 
       <h2>Number</h2>
@@ -43,7 +58,7 @@ const ContactForm = ({ addContact }) => {
         title="Phone number must be digits and can contain spaces, dashes, parentheses and can start with +"
         required
         value={number}
-        onChange={(e) => setNumber(e.target.value)}
+        onChange={e => setNumber(e.target.value)}
       />
 
       <button type="submit" onClick={handleSubmit}>
@@ -51,10 +66,6 @@ const ContactForm = ({ addContact }) => {
       </button>
     </div>
   );
-};
-
-ContactForm.propTypes = {
-  addContact: PropTypes.func.isRequired,
 };
 
 export default ContactForm;
